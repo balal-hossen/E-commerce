@@ -4,6 +4,8 @@ import RootLay from "./RootLayout";
 import Home from "../Componet/Home";
 import Login from "../LoginSystem/Login";
 import Register from "../LoginSystem/Register";
+import AdminRoute from "../AuthProvider/AdminRoute";
+import DashboardLayout from "../AdminDashboard/DashboardLayout";
 
  
 
@@ -23,10 +25,24 @@ export const router = createBrowserRouter([
         {
           path:"/signup",
           element:<Register/>
-        }
+        },
+      
+     {
+    path: "/admin",
+    element: (
+      <AdminRoute>
+        <DashboardLayout />
+      </AdminRoute>
+    ),
+  },
     
    
     ],
+    
+    
+     
+    
+    
     
        
     

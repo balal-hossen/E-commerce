@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -10,13 +10,16 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "../Firebase.config";
-import { AuthContext } from "./Authcontext";
 
-
+export const AuthContext = createContext();
 const googleProvider = new GoogleAuthProvider();
+
+// Admin email define
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL; // ✨ Change this to your admin email
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Register
@@ -34,9 +37,7 @@ const AuthProvider = ({ children }) => {
 
   // Reset Password
   const resetPassword = (email) =>
-    sendPasswordResetEmail(auth, email, {
-      url: "http://localhost:3000/login", // reset link
-    });
+    sendPasswordResetEmail(auth, email, { url: "http://localhost:3000/login" });
 
   // Logout
   const logOut = async () => {
@@ -44,10 +45,11 @@ const AuthProvider = ({ children }) => {
     window.location.reload();
   };
 
-  // Auth Observer
+  // Auth observer
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setIsAdmin(currentUser?.email === ADMIN_EMAIL);
       setLoading(false);
     });
     return () => unsubscribe();
@@ -57,6 +59,7 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        isAdmin,
         loading,
         createUser,
         signIn,
