@@ -1,5 +1,6 @@
 import React from "react";
 import { useCart } from "../CardContext/CartContext";
+import ProductList from "./ProductList";
 
 
 const Products = () => {
@@ -194,6 +195,7 @@ const Products = () => {
           </div>
         </div>
       </section>
+      <ProductList/>
     </div>
   );
 };
